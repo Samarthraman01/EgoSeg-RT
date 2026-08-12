@@ -1,10 +1,10 @@
-Model,Export,Hardware,FPS,Latency_ms,mIoU,Size_MB
-U-Net,PyTorch,M2 CPU,1.3,769,0.069,90
-SegFormer-B2,PyTorch,M2 CPU,1.3,769,0.350,105
-SegFormer-B2,PyTorch,M2 MPS,7.3,137,0.350,105
-SegFormer-B2,ONNX FP32,M2 CPU,2.2,450,0.350,105
-SegFormer-B2,INT8,M2 CPU,1.0,1000,0.346,29
-SegFormer-B0,PyTorch,M2 MPS,21.1,47,0.287,15
-SegFormer-B0,ONNX FP32,M2 CPU,12.6,79,0.287,15
-SegFormer-B2,PyTorch,T4 GPU,19.7,50,0.350,105
-SegFormer-B0,PyTorch,T4 GPU,79.4,12,0.287,15
+Model,Hardware,FPS,Latency (ms),mIoU,Size (MB),Real-time
+U-Net,M2 CPU,1.3,769,0.069,90,❌
+SegFormer-B2,M2 CPU,1.3,769,0.35,105,❌
+SegFormer-B2,M2 MPS,7.3,137,0.35,105,❌
+SegFormer-B2 ONNX,M2 CPU,2.2,450,0.35,105,❌
+SegFormer-B2 INT8,M2 CPU,1.0,1000,0.346,29,❌
+SegFormer-B0,M2 MPS,21.1,47,0.287,15,✅
+SegFormer-B0 ONNX,M2 CPU,12.6,79,0.287,15,❌
+SegFormer-B2,T4 GPU,19.7,50,0.35,105,✅
+SegFormer-B0,T4 GPU,79.4,12,0.287,15,✅
