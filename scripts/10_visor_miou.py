@@ -9,12 +9,22 @@ import time
 
 #---class mapping ------- visor to ade20k
 VISOR_TO_ADE20K = {
-    3:   13,   # door → door
-    2:   26,   # sink → sink
-    300: 12,   # left hand → person
-    301: 12,   # right hand → person
-    302: 12,   # glove left → person
-    303: 12,   # glove right → person
+    # structural (high pixel count → most reliable)
+    63:  26,   # sink → sink
+    159:  3,   # floor → floor
+    3:   10,   # cupboard → cabinet
+    12:  28,   # fridge → refrigerator
+
+    # hands (high pixel count)
+    300: 12,   # hand:left → person
+    301: 12,   # hand:right → person
+    303: 12,   # glove:left → person
+    304: 12,   # glove:right → person
+
+    # smaller but valid matches
+    15:  44,   # bottle → bottle
+    
+    23:  38,   # box → box
 }
 
 #-----Setup-------------------------------
@@ -125,7 +135,15 @@ print(f"\n── VISOR Distribution Shift Results ──────────
 print(f"ADE20K mIoU (same domain):    0.350")
 print(f"\nMatched class IoU on VISOR:")
 
-class_names = {12: 'person/hand', 14: 'door'}
+class_names = {
+    26:  'sink',
+    3:   'floor',
+    10:  'cabinet/cupboard',
+    28:  'refrigerator',
+    12:  'person/hand',
+    44:  'bottle',
+    38:  'box',
+}
 all_ious = []
 
 for ade_id, scores in iou_scores.items():

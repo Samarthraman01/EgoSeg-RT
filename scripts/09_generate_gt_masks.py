@@ -1,17 +1,18 @@
 """
 Rasterize VISOR sparse JSON polygon annotations into per-pixel class-index
-PNG masks for the P01_107 validation frames in data/visor_hos/val_frames.
+PNG masks for the validation frames in data/visor_hos/val_frames.
 
-Source: data/visor_hos/.../annotations/val/P01_107.json
+Source: data/visor_hos/.../annotations/val/<video>.json, one per video
 (downloaded from data.bris.ac.uk -- VISOR is not on HuggingFace, no auth needed)
 """
+import glob
 import json
 import os
 
 import numpy as np
 from PIL import Image, ImageDraw
 
-ANNOTATIONS_JSON = "data/visor_hos/2v6cgv1x04ol22qp9rm9x2j6a7/GroundTruth-SparseAnnotations/annotations/val/P01_107.json"
+ANNOTATIONS_DIR = "data/visor_hos/2v6cgv1x04ol22qp9rm9x2j6a7/GroundTruth-SparseAnnotations/annotations/val"
 FRAMES_DIR = "data/visor_hos/val_frames"
 OUTPUT_DIR = "data/visor_hos/val_masks"
 
@@ -44,26 +45,29 @@ def rasterize(image_size, annotations):
 
 def main():
     os.makedirs(OUTPUT_DIR, exist_ok=True)
-    with open(ANNOTATIONS_JSON) as f:
-        data = json.load(f)
+    json_paths = sorted(glob.glob(os.path.join(ANNOTATIONS_DIR, "*.json")))
 
     written, skipped = 0, 0
-    for entry in data["video_annotations"]:
-        frame_name = entry["image"]["name"]
-        frame_path = os.path.join(FRAMES_DIR, frame_name)
-        if not os.path.exists(frame_path):
-            skipped += 1
-            continue
+    for json_path in json_paths:
+        with open(json_path) as f:
+            data = json.load(f)
 
-        with Image.open(frame_path) as im:
-            size = im.size
+        for entry in data["video_annotations"]:
+            frame_name = entry["image"]["name"]
+            frame_path = os.path.join(FRAMES_DIR, frame_name)
+            if not os.path.exists(frame_path):
+                skipped += 1
+                continue
 
-        mask = rasterize(size, entry["annotations"])
-        out_name = os.path.splitext(frame_name)[0] + ".png"
-        Image.fromarray(mask).save(os.path.join(OUTPUT_DIR, out_name))
-        written += 1
+            with Image.open(frame_path) as im:
+                size = im.size
 
-    print(f"Wrote {written} masks to {OUTPUT_DIR} ({skipped} frames skipped, no matching jpg)")
+            mask = rasterize(size, entry["annotations"])
+            out_name = os.path.splitext(frame_name)[0] + ".png"
+            Image.fromarray(mask).save(os.path.join(OUTPUT_DIR, out_name))
+            written += 1
+
+    print(f"Wrote {written} masks to {OUTPUT_DIR} from {len(json_paths)} videos ({skipped} frames skipped, no matching jpg)")
 
 
 if __name__ == "__main__":
