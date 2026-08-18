@@ -12,9 +12,10 @@ import os
 import numpy as np
 from PIL import Image, ImageDraw
 
-ANNOTATIONS_DIR = "data/visor_hos/2v6cgv1x04ol22qp9rm9x2j6a7/GroundTruth-SparseAnnotations/annotations/val"
-FRAMES_DIR = "data/visor_hos/val_frames"
-OUTPUT_DIR = "data/visor_hos/val_masks"
+
+ANNOTATIONS_DIR = "data/visor_hos/2v6cgv1x04ol22qp9rm9x2j6a7/GroundTruth-SparseAnnotations/annotations/train"
+FRAMES_DIR = "data/visor_hos/train_frames"
+OUTPUT_DIR      = "data/visor_hos/train_masks"
 
 # Hand/glove classes (300-303) sit on top of everything else in VISOR;
 # draw them last so object polygons underneath don't occlude them.
